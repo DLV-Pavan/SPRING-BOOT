@@ -1,30 +1,85 @@
 
+<%@ page language="java" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Add Employee</title>
+    <title>Employee Registration</title>
+
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/css/style.css">
 </head>
 
 <body>
 
-    <h2>Add Employee</h2>
+    <div class="navbar">
+        <h2>Employee Management System</h2>
 
-    <form action="saveEmp" method="post">
+        <div>
+            <a href="${pageContext.request.contextPath}/employees/getEmp">
+                Employees
+            </a>
 
-        Name:
-        <input type="text" name="ename">
-        <br><br>
+            <a href="${pageContext.request.contextPath}/employees/addEmp">
+                Add Employee
+            </a>
+        </div>
+    </div>
 
-        Salary:
-        <input type="text" name="sal">
-        <br><br>
+    <div class="container">
 
-        <input type="submit" value="Save">
+        <h2>Employee Registration</h2>
 
-    </form>
+        <form action="${pageContext.request.contextPath}/employees/saveEmp"
+              method="post">
 
-    <br>
+            <div class="form-group">
+                <label>Employee Name</label>
 
-    <a href="getEmp">View Employees</a>
+                <input type="text"
+                       name="ename"
+                       placeholder="Enter employee name"
+                       pattern="(?i)Pavan"
+                       title="Only Pavan is allowed"
+                       required>
+
+                <c:forEach var="err" items="${errors}">
+                    <c:if test="${err.field == 'ename'}">
+                        <p class="error">${err.defaultMessage}</p>
+                    </c:if>
+                </c:forEach>
+            </div>
+
+            <div class="form-group">
+                <label>Salary</label>
+
+                <input type="number"
+                       name="sal"
+                       placeholder="Enter salary"
+                       min="5000"
+                       max="75000"
+                       step="0.01"
+                       required>
+
+                <c:forEach var="err" items="${errors}">
+                    <c:if test="${err.field == 'sal'}">
+                        <p class="error">${err.defaultMessage}</p>
+                    </c:if>
+                </c:forEach>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Register Employee
+            </button>
+
+        </form>
+
+        <a href="${pageContext.request.contextPath}/employees/getEmp">
+            View Employees
+        </a>
+
+    </div>
 
 </body>
 </html>

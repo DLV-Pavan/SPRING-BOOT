@@ -2,6 +2,9 @@ package com.SPRINGBOOT_MVC.CONTROLLER;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +30,29 @@ public class EmployeeController {
         return "addEmployee";
     }
 
-    // CREATE - Save Employee
-    @PostMapping("/saveEmp")
-    public ModelAndView saveEmp(@ModelAttribute Employee emp) {
 
-        es.saveEmployee(emp);
+ // CREATE - Save Employee with Validation
+ @PostMapping("/saveEmp")
+ public ModelAndView saveEmp(
+         @Valid @ModelAttribute Employee emp,
+         BindingResult result) {
 
-        return new ModelAndView("redirect:/employees/getEmp");
-    }
+     ModelAndView mv = new ModelAndView();
+
+     if (result.hasErrors()) {
+
+         mv.addObject("errors", result.getFieldErrors());
+
+         mv.setViewName("addEmployee");
+
+         return mv;
+     }
+
+     es.saveEmployee(emp);
+
+     return new ModelAndView("redirect:/employees/getEmp");
+ }
+
 
     // READ - Get All Employees
     @GetMapping("/getEmp")
@@ -50,28 +68,43 @@ public class EmployeeController {
         return mv;
     }
 
-    // UPDATE - Get Employee By ID
-    @GetMapping("/editEmp")
-    public ModelAndView editEmp(@RequestParam int eid) {
 
-        Employee emp = es.getEmployeeById(eid);
+ // UPDATE - Save Employee with Validation
+ @PostMapping("/updateEmp")
+ public ModelAndView updateEmp(
+         @Valid @ModelAttribute Employee emp,
+         BindingResult result) {
 
-        ModelAndView mv = new ModelAndView();
+     ModelAndView mv = new ModelAndView();
 
-        mv.addObject("employee", emp);
-        mv.setViewName("editEmployee");
+     if (result.hasErrors()) {
 
-        return mv;
-    }
+         mv.addObject("errors", result.getFieldErrors());
 
-    // UPDATE - Save Employee
-    @PostMapping("/updateEmp")
-    public ModelAndView updateEmp(@ModelAttribute Employee emp) {
+         mv.addObject("employee", emp);
 
-        es.updateEmployee(emp);
+         mv.setViewName("editEmployee");
 
-        return new ModelAndView("redirect:/employees/getEmp");
-    }
+         return mv;
+     }
+
+     es.updateEmployee(emp);
+
+     return new ModelAndView("redirect:/employees/getEmp");
+ }
+
+@GetMapping("/editEmp")
+public ModelAndView editEmp(@RequestParam("eid") int eid) {
+
+    Employee emp = es.getEmployeeById(eid);
+
+    ModelAndView mv = new ModelAndView();
+
+    mv.addObject("employee", emp);
+    mv.setViewName("editEmployee");
+
+    return mv;
+}
 
     // DELETE - Delete Employee
     @GetMapping("/deleteEmp")
