@@ -1,3 +1,4 @@
+
 package com.EmpRestAPI.model;
 
 import jakarta.persistence.Entity;

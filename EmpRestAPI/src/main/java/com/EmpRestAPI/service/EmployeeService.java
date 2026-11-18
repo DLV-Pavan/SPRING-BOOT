@@ -1,3 +1,4 @@
+
 package com.EmpRestAPI.service;
 
 import java.util.List;
@@ -16,16 +17,58 @@ public class EmployeeService {
         this.er = er;
     }
 
+    // Add Employee
     public Employee addEmployee(Employee emp) {
         return er.save(emp);
     }
 
+    // Get All Employees
     public List<Employee> getAllEmp() {
+        return er.findAll();
+    }
 
-        List<Employee> list = er.findAll();
+    // Get Employee By ID
+    public Employee getEmpById(int eid) {
+        return er.findById(eid).orElse(null);
+    }
 
-        System.out.println("Total Employees: " + list.size());
+    // Delete Employee
+    public boolean deleteId(int eid) {
 
-        return list;
+        if (er.existsById(eid)) {
+            er.deleteById(eid);
+            return true;
+        }
+
+        return false;
+    }
+
+    // Update Employee
+    public Employee updateEmp(Employee emp, int eid) {
+
+        Employee existingEmp = er.findById(eid).orElse(null);
+
+        if (existingEmp != null) {
+            existingEmp.setEname(emp.getEname());
+            return er.save(existingEmp);
+        }
+
+        return null;
+    }
+    
+    public Employee patchEmp(Employee emp, int eid) {
+
+        Employee existingEmp = er.findById(eid).orElse(null);
+
+        if (existingEmp != null) {
+
+            if (emp.getEname() != null) {
+                existingEmp.setEname(emp.getEname());
+            }
+
+            return er.save(existingEmp);
+        }
+
+        return null;
     }
 }

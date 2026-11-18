@@ -15,5 +15,5 @@ public class EmpRestApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EmpRestApiApplication.class, args);
-    }
+    }  
 }
